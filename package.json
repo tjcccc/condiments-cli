@@ -1,0 +1,43 @@
+{
+  "name": "condiments",
+  "project": "condiments",
+  "description": "A small cli tools",
+  "version": "1.0.0",
+  "keywords": [
+    "cli",
+    "tools",
+    "command",
+    "node",
+    "front-end"
+  ],
+  "homepage": "https://github.com/tjcccc/condiments-cli",
+  "author": "tjcccc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjcccc/condiments-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tjcccc/condiments-cli/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "private": true,
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.0.0",
+    "fs-extra": "^9.1.0",
+    "lowdb": "^1.0.0",
+    "nanoid": "^3.1.20",
+    "readline-sync": "^1.4.10"
+  },
+  "scripts": {
+    "build": ""
+  },
+  "bin": {
+    "cond": "./src/commands/condiments.js"
+  }
+}
