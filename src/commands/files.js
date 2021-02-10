@@ -36,7 +36,7 @@ const save = {
 
       const targetId = nanoid();
       const isDirectory = fs.lstatSync(sourcePath).isDirectory();
-      let targetAlias = options.alias === undefined ? sourceOriginalName : options.alias;
+      let targetAlias = options.alias === undefined || options.alias === '' || options.alias === true ? sourceOriginalName : options.alias;
 
       // Set alias.
       if (options.alias !== undefined && options.alias.length > 0) {
@@ -64,9 +64,26 @@ const save = {
       // Check alias in db.
       const sameAlias = db.get('files')
         .countBy({ alias: targetAlias }).value();
-      if (sameAlias.true > 0) {
+
+      if (sameAlias.true > 0 && options.force === undefined) {
         console.log('Same alias exits.');
         return;
+      }
+
+      if (sameAlias.true > 0 && options.force) {
+        const overwriteAnswer = readlineSync.question('Same alias exits. Overwrite it? (y/N) ');
+        if (overwriteAnswer !== 'Y' && overwriteAnswer !== 'y') {
+          console.log('Canceled');
+          return;
+        }
+
+        // Remove old from library.
+        const oldId = db.get('files').find({ alias: targetAlias }).value().id;
+        const oldFilePath = path.join(filesDir, oldId);
+        fs.removeSync(oldFilePath);
+
+        // Remove old from db.
+        db.get('files').remove({ alias: targetAlias }).write();
       }
 
       // Save to db.
@@ -89,11 +106,11 @@ const save = {
   options: {
     force: {
       syntax: '-f, --force',
-      description: 'overwrite existed file or folder with same name.'
+      description: 'Overwrite existed file or folder with same name.'
     },
     alias: {
       syntax: '-a, --alias [name]',
-      description: 'set alias for saved file or folder.'
+      description: 'Set alias for saved file or folder.'
     }
   }
 };
@@ -161,11 +178,11 @@ const load = {
   options: {
     force: {
       syntax: '-f, --force',
-      description: 'overwrite existed file or folder with same name in dist directory.'
+      description: 'Overwrite existed file or folder with same name in dist directory.'
     },
     dist: {
       syntax: '-d, --dist [path]',
-      description: 'load request file or folder to a specified path.'
+      description: 'Load request file or folder to a specified path.'
     }
   }
 };
@@ -175,11 +192,10 @@ const filesHub = {
   description: 'Files library manager.',
   listFiles: {
     command: 'ls',
-    arguments: '<path>',
-    description: 'Save a file or folder to condiments library',
+    description: 'List condiments Files library',
     action: () => {
-      console.log('\nSaved Files: \n-------------');
-      console.log('No.\tId\t\t\tAlias\tType\tSource Path');
+      console.log('\nSaved Files: \n-----------------');
+      console.log(`No.\t${'Id'.padEnd(22)}\t${'Alias'.padEnd(16)}\t${'Type'.padEnd(8)}\tSource`);
 
       // Connect the db.
       const adapter = new FileSync(dbPath);
@@ -187,7 +203,7 @@ const filesHub = {
 
       const files = db.get('files').value();
       files.forEach((file, index) => {
-        console.log(`${index + 1}\t${file.id}\t${file.alias}\t${file.type}\t${file.source}`);
+        console.log(`${index + 1}\t${file.id.padEnd(22)}\t${file.alias.padEnd(16)}\t${file.type.padEnd(8)}\t${file.source}`);
       });
       console.log('\n');
     }
