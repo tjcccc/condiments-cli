@@ -8,7 +8,7 @@ version: 1.0.0
 
 ```bash
 npm install -g condiments
-// or
+# or
 yarn add -g condiments
 ```
 
@@ -42,6 +42,18 @@ cond load myFolder
 
 Without option `-d (--dist)`, files will be load to current directory.
 
+You can use `-b (--bare)` to load folder files in flat way:
+
+```bash
+# fe-component folder: component.html, component.js, component.css
+
+cond load fe-component -d ./my-component
+# result: ./my-component/fe-component/...html, ...js, ...css
+
+cond load fe-component -d ./my-component
+# result: ./my-component/...html, ...js, ...css
+```
+
 ### List Files
 
 After files saved, you can list them to the terminal:
@@ -52,13 +64,13 @@ cond files ls
 
 ### Remove and Clean Files
 
-You can remove file or folder by its alias:
+Remove file or folder by its alias:
 
 ```bash
 cond files rm alias_name
 ```
 
-You can remove all by use clean command:
+Remove all by use clean command:
 
 ```bash
 cond files clean
@@ -66,12 +78,46 @@ cond files clean
 
 ## Usage for Scripts
 
-(Not ready)
+For running script, only Linux / Unix shell and Powershell are supported now.
 
 ### Save Scripts
 
+Save script code snippet:
+
+```bash
+cond script { ls -la } -a alias_name1
+cond script "ping baidu.com" -a alias_name2
+```
+
+Save script file:
+
+```bash
+cond script script_a.ps1 -a script_a
+cond script script_b.sh -a script_b
+```
+
 ### Run Saved Scripts
+
+```bash
+cond run alias_name
+```
 
 ### List Scripts
 
+```bash
+cond scripts ls
+```
+
 ### Remove and Clean Scripts
+
+Remove script by its alias:
+
+```bash
+cond scripts rm alias_name
+```
+
+Remove all by use clean command:
+
+```bash
+cond scripts clean
+```
