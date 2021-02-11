@@ -1,5 +1,5 @@
 {
-  "name": "condiments",
+  "name": "condiments-cli",
   "project": "condiments",
   "description": "A small cli tools",
   "version": "1.0.0",
@@ -25,7 +25,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^7.0.0",
