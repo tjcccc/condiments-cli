@@ -1,4 +1,4 @@
-# Condiments
+# Condiments CLI
 
 A small cli tools (based on nodejs environment)
 
@@ -85,6 +85,7 @@ For running script, only Linux / Unix shell and Powershell are supported now.
 Save script code snippet:
 
 ```bash
+# { } is only supported by Powershell.
 cond script { ls -la } -a alias_name1
 cond script "ping baidu.com" -a alias_name2
 ```
