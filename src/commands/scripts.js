@@ -283,23 +283,23 @@ const scriptsHub = {
       const db = low(adapter);
 
       // Get file name (id).
-      const targetId = db.get('files').find({ alias: requestAlias }).value().id;
+      const targetId = db.get('scripts').find({ alias: requestAlias }).value().id;
 
       // Remove from database.
-      db.get('files').remove({ alias: requestAlias }).write();
+      db.get('scripts').remove({ alias: requestAlias }).write();
 
       // Remove from work folder.
       const targetPath = path.join(scriptsDir, targetId);
       fs.removeSync(targetPath);
 
-      console.log(`${requestAlias} has been removed.`);
+      console.log(`Script ${requestAlias} has been removed.`);
     }
   },
   removeAllScripts: {
     command: 'clean',
     description: 'Remove all stored scripts.',
     action: () => {
-      const answer = readlineSync.question('CLEAN ALL FILES? (y/N) ');
+      const answer = readlineSync.question('CLEAN ALL SCRIPTS? (y/N) ');
 
       if (answer !== 'Y' && answer !== 'y') {
         console.log('Canceled');
@@ -311,10 +311,10 @@ const scriptsHub = {
       const db = low(adapter);
 
       // Remove all files.
-      db.get('files').remove({}).write();
+      db.get('scripts').remove({}).write();
       fs.emptyDir(scriptsDir);
 
-      console.log('All files have been cleaned.');
+      console.log('All scripts have been cleaned.');
     }
   }
 };

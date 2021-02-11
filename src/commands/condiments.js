@@ -44,6 +44,7 @@ program
   .arguments(load.arguments)
   .option(load.options.force.syntax, load.options.force.description)
   .option(load.options.dist.syntax, load.options.dist.description)
+  .option(load.options.bare.syntax, load.options.bare.description)
   .action((requestAlias, options) => load.action(requestAlias, options));
 
 // List all stored files

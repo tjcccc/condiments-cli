@@ -129,9 +129,10 @@ const load = {
       // console.log(options);
 
       // Check directory
-      if (options.dist !== undefined && !fs.lstatSync(options.dist).isDirectory()) {
-        console.log('Illegal path.');
-        return;
+      if (options.dist !== undefined && fs.existsSync(options.dist) === false) {
+        // console.log('Illegal path.');
+        fs.ensureDirSync(options.dist);
+        // return;
       }
 
       // Check alias by regex.
@@ -157,7 +158,7 @@ const load = {
       const libSource = path.join(filesDir, file.id);
 
       // Check if target exists.
-      if (fs.pathExistsSync(distTarget)) {
+      if (!options.bare && fs.pathExistsSync(distTarget)) {
         if (!options.force) {
           console.log('File or folder exists.');
           process.exit();
@@ -169,8 +170,26 @@ const load = {
         }
       }
 
-      // Load
-      fs.copySync(libSource, distTarget);
+      // Load files inside the request folder.
+      if (file.type === 'folder' && options.bare) {
+        fs.readdir(libSource, (readError, filesInFolder) => {
+          if (readError) {
+            console.error(readError);
+          }
+          const bareDistTarget = targetPath;
+          filesInFolder.forEach(fileInFolder => {
+            // console.log(fileInFolder);
+            // eslint-disable-next-line max-len
+            fs.copySync(path.join(libSource, fileInFolder), path.join(bareDistTarget, fileInFolder), {
+              overwrite: false,
+              errorOnExist: true
+            });
+          });
+        });
+      } else {
+        // Common Load
+        fs.copySync(libSource, distTarget);
+      }
 
       console.log(`${chalk.greenBright(`"${fileName} (${requestAlias})" loaded to: ${targetPath}`)}`);
     });
@@ -183,6 +202,10 @@ const load = {
     dist: {
       syntax: '-d, --dist [path]',
       description: 'Load request file or folder to a specified path.'
+    },
+    bare: {
+      syntax: '-b --bare',
+      description: 'When Loading a folder, just load files within it.'
     }
   }
 };
