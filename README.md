@@ -7,9 +7,9 @@ version: 1.0.0
 ## Installation
 
 ```bash
-npm install -g condiments
+npm install -g condiments-cli
 # or
-yarn add -g condiments
+yarn add -g condiments-cli
 ```
 
 After package installed, initialized it:
